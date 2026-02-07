@@ -1,0 +1,61 @@
+---
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="bg-charcoal text-thread-300 mt-auto">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <!-- Brand -->
+      <div class="sm:col-span-2 lg:col-span-1">
+        <span class="font-serif text-xl font-bold text-warm-white">
+          Ember <span class="text-ember-400">&</span> Thread
+        </span>
+        <p class="mt-3 text-sm text-thread-400 max-w-xs">
+          Handcrafted artisan goods for the modern home. Every piece tells a story.
+        </p>
+      </div>
+
+      <!-- Shop -->
+      <div>
+        <h3 class="text-sm font-semibold text-warm-white uppercase tracking-wider mb-4">Shop</h3>
+        <ul class="space-y-2">
+          <li><a href="/?category=ceramics" class="text-sm text-thread-400 hover:text-ember-400 transition-colors">Ceramics</a></li>
+          <li><a href="/?category=textiles" class="text-sm text-thread-400 hover:text-ember-400 transition-colors">Textiles</a></li>
+          <li><a href="/?category=kitchen" class="text-sm text-thread-400 hover:text-ember-400 transition-colors">Kitchen</a></li>
+          <li><a href="/?category=home" class="text-sm text-thread-400 hover:text-ember-400 transition-colors">Home</a></li>
+        </ul>
+      </div>
+
+      <!-- Company -->
+      <div>
+        <h3 class="text-sm font-semibold text-warm-white uppercase tracking-wider mb-4">Company</h3>
+        <ul class="space-y-2">
+          <li><a href="#" class="text-sm text-thread-400 hover:text-ember-400 transition-colors">Our Story</a></li>
+          <li><a href="#" class="text-sm text-thread-400 hover:text-ember-400 transition-colors">Artisans</a></li>
+          <li><a href="#" class="text-sm text-thread-400 hover:text-ember-400 transition-colors">Sustainability</a></li>
+          <li><a href="#" class="text-sm text-thread-400 hover:text-ember-400 transition-colors">Contact</a></li>
+        </ul>
+      </div>
+
+      <!-- Support -->
+      <div>
+        <h3 class="text-sm font-semibold text-warm-white uppercase tracking-wider mb-4">Support</h3>
+        <ul class="space-y-2">
+          <li><a href="#" class="text-sm text-thread-400 hover:text-ember-400 transition-colors">Shipping & Returns</a></li>
+          <li><a href="#" class="text-sm text-thread-400 hover:text-ember-400 transition-colors">Care Instructions</a></li>
+          <li><a href="#" class="text-sm text-thread-400 hover:text-ember-400 transition-colors">FAQ</a></li>
+          <li><a href="#" class="text-sm text-thread-400 hover:text-ember-400 transition-colors">Privacy Policy</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-12 pt-8 border-t border-thread-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p class="text-xs text-thread-500">
+        &copy; {currentYear} Ember & Thread. All rights reserved.
+      </p>
+      <p class="text-xs text-thread-600">
+        This is a demo template &mdash; no real products for sale.
+      </p>
+    </div>
+  </div>
+</footer>

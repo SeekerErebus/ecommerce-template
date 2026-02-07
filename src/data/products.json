@@ -1,0 +1,110 @@
+[
+  {
+    "id": "hand-thrown-mug",
+    "name": "Hand-Thrown Ceramic Mug",
+    "price": 38,
+    "category": "ceramics",
+    "description": "Each mug is hand-thrown on a potter's wheel and finished with a reactive glaze that makes every piece unique. Holds 12 oz comfortably. Microwave and dishwasher safe.",
+    "image": "https://placehold.co/600x600/d4a574/ffffff?text=Ceramic+Mug",
+    "badge": "Bestseller"
+  },
+  {
+    "id": "linen-table-runner",
+    "name": "Washed Linen Table Runner",
+    "price": 54,
+    "category": "textiles",
+    "description": "Stonewashed European linen in a soft oatmeal tone. Pre-shrunk and garment-dyed for a lived-in look from day one. 14\" x 72\".",
+    "image": "https://placehold.co/600x600/c4b5a0/ffffff?text=Linen+Runner",
+    "badge": null
+  },
+  {
+    "id": "soy-candle-cedar",
+    "name": "Cedar & Smoke Soy Candle",
+    "price": 28,
+    "category": "home",
+    "description": "Hand-poured soy wax candle with notes of smoked cedar, black pepper, and warm amber. Burns for approximately 50 hours. 8 oz amber glass jar.",
+    "image": "https://placehold.co/600x600/8b7355/ffffff?text=Soy+Candle",
+    "badge": null
+  },
+  {
+    "id": "wool-throw-blanket",
+    "name": "Herringbone Wool Throw",
+    "price": 120,
+    "category": "textiles",
+    "description": "A luxuriously soft merino wool throw in a classic herringbone weave. Perfect draped over a couch or at the foot of the bed. 50\" x 70\".",
+    "image": "https://placehold.co/600x600/9a8b7a/ffffff?text=Wool+Throw",
+    "badge": "New"
+  },
+  {
+    "id": "olive-wood-board",
+    "name": "Olive Wood Serving Board",
+    "price": 62,
+    "category": "kitchen",
+    "description": "Sustainably harvested olive wood, shaped and sanded by hand. Each board has its own unique grain pattern. Treat with mineral oil to maintain. Approx 16\" x 8\".",
+    "image": "https://placehold.co/600x600/a08060/ffffff?text=Wood+Board",
+    "badge": null
+  },
+  {
+    "id": "stoneware-bowl-set",
+    "name": "Stoneware Bowl Set",
+    "price": 85,
+    "category": "ceramics",
+    "description": "Set of three nesting bowls in speckled stoneware. Reactive glazes in cream, sage, and charcoal. Oven, microwave, and dishwasher safe.",
+    "image": "https://placehold.co/600x600/b8a088/ffffff?text=Bowl+Set",
+    "badge": null
+  },
+  {
+    "id": "cotton-napkin-set",
+    "name": "Organic Cotton Napkin Set",
+    "price": 32,
+    "category": "textiles",
+    "description": "Set of four napkins in heavyweight organic cotton. Pre-washed for softness. Available in natural, clay, and slate. 18\" x 18\" each.",
+    "image": "https://placehold.co/600x600/c9b99a/ffffff?text=Napkin+Set",
+    "badge": null
+  },
+  {
+    "id": "brass-taper-holder",
+    "name": "Brass Taper Candle Holder",
+    "price": 44,
+    "category": "home",
+    "description": "Solid brass candle holder with a weighted base and a gorgeous patina that deepens over time. Fits standard taper candles. 4\" tall.",
+    "image": "https://placehold.co/600x600/c5a55a/ffffff?text=Brass+Holder",
+    "badge": null
+  },
+  {
+    "id": "ceramic-vase",
+    "name": "Minimal Bud Vase",
+    "price": 29,
+    "category": "ceramics",
+    "description": "A simple, elegant bud vase in matte white stoneware. Perfect for a single stem or small arrangement. 6\" tall.",
+    "image": "https://placehold.co/600x600/d5c8b8/ffffff?text=Bud+Vase",
+    "badge": null
+  },
+  {
+    "id": "linen-apron",
+    "name": "Cross-Back Linen Apron",
+    "price": 48,
+    "category": "kitchen",
+    "description": "Full-length European linen apron with cross-back straps — no ties, no fuss. One size fits most. Gets softer with every wash.",
+    "image": "https://placehold.co/600x600/b0a090/ffffff?text=Linen+Apron",
+    "badge": "Bestseller"
+  },
+  {
+    "id": "incense-holder",
+    "name": "Concrete Incense Holder",
+    "price": 22,
+    "category": "home",
+    "description": "Minimalist concrete tray for incense sticks and cones. Hand-cast with a smooth finish and felt-padded base. 6\" diameter.",
+    "image": "https://placehold.co/600x600/908070/ffffff?text=Incense+Holder",
+    "badge": null
+  },
+  {
+    "id": "chef-knife",
+    "name": "Forged Carbon Steel Chef Knife",
+    "price": 145,
+    "category": "kitchen",
+    "description": "8\" chef knife hand-forged from high-carbon steel with a walnut handle. Develops a unique patina with use. Comes with a leather blade guard.",
+    "image": "https://placehold.co/600x600/6b5b4b/ffffff?text=Chef+Knife",
+    "badge": "New"
+  }
+]

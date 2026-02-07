@@ -1,0 +1,119 @@
+---
+const navLinks = [
+  { label: 'Shop', href: '/' },
+  { label: 'Ceramics', href: '/?category=ceramics' },
+  { label: 'Textiles', href: '/?category=textiles' },
+  { label: 'Kitchen', href: '/?category=kitchen' },
+  { label: 'Home', href: '/?category=home' },
+];
+---
+
+<header class="sticky top-0 z-40 bg-warm-white/95 backdrop-blur-sm border-b border-thread-200">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16 sm:h-20">
+      <!-- Logo -->
+      <a href="/" class="flex items-center gap-2 group">
+        <span class="font-serif text-xl sm:text-2xl font-bold text-charcoal tracking-tight group-hover:text-ember-600 transition-colors">
+          Ember <span class="text-ember-500">&</span> Thread
+        </span>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-8">
+        {navLinks.map((link) => (
+          <a
+            href={link.href}
+            class="text-sm font-medium text-thread-700 hover:text-ember-600 transition-colors"
+          >
+            {link.label}
+          </a>
+        ))}
+      </nav>
+
+      <!-- Actions -->
+      <div class="flex items-center gap-4">
+        <!-- Search (decorative) -->
+        <button
+          class="hidden sm:flex items-center justify-center w-10 h-10 rounded-full text-thread-600 hover:text-ember-600 hover:bg-thread-100 transition-colors"
+          aria-label="Search"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+          </svg>
+        </button>
+
+        <!-- Cart Button -->
+        <button
+          id="cart-toggle"
+          class="relative flex items-center justify-center w-10 h-10 rounded-full text-thread-600 hover:text-ember-600 hover:bg-thread-100 transition-colors"
+          aria-label="Open cart"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+          </svg>
+          <span
+            id="cart-count"
+            class="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 bg-ember-500 text-white text-xs font-bold rounded-full hidden"
+          >
+            0
+          </span>
+        </button>
+
+        <!-- Mobile Menu Button -->
+        <button
+          id="mobile-menu-toggle"
+          class="md:hidden flex items-center justify-center w-10 h-10 rounded-full text-thread-600 hover:text-ember-600 hover:bg-thread-100 transition-colors"
+          aria-label="Open menu"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Nav -->
+    <nav id="mobile-menu" class="md:hidden hidden border-t border-thread-200 py-4">
+      <div class="flex flex-col gap-3">
+        {navLinks.map((link) => (
+          <a
+            href={link.href}
+            class="text-sm font-medium text-thread-700 hover:text-ember-600 transition-colors py-1"
+          >
+            {link.label}
+          </a>
+        ))}
+      </div>
+    </nav>
+  </div>
+</header>
+
+<script>
+  // Mobile menu toggle
+  const menuToggle = document.getElementById('mobile-menu-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+  menuToggle?.addEventListener('click', () => {
+    mobileMenu?.classList.toggle('hidden');
+  });
+
+  // Cart count badge
+  function updateCartBadge() {
+    const badge = document.getElementById('cart-count');
+    if (!badge || !window.emberCart) return;
+    const count = window.emberCart.getCount();
+    badge.textContent = String(count);
+    badge.classList.toggle('hidden', count === 0);
+  }
+
+  // Cart sidebar toggle
+  const cartToggle = document.getElementById('cart-toggle');
+  cartToggle?.addEventListener('click', () => {
+    const sidebar = document.getElementById('cart-sidebar');
+    const overlay = document.getElementById('cart-overlay');
+    sidebar?.classList.remove('translate-x-full');
+    overlay?.classList.remove('hidden');
+  });
+
+  window.addEventListener('cart-updated', updateCartBadge);
+  updateCartBadge();
+</script>

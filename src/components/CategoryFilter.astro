@@ -1,0 +1,35 @@
+---
+interface Props {
+  categories: string[];
+  activeCategory: string | null;
+}
+
+const { categories, activeCategory } = Astro.props;
+---
+
+<div class="flex flex-wrap items-center gap-2">
+  <a
+    href="/"
+    class:list={[
+      'px-4 py-2 text-sm font-medium rounded-full border transition-colors',
+      !activeCategory
+        ? 'bg-charcoal text-warm-white border-charcoal'
+        : 'bg-white text-thread-600 border-thread-200 hover:border-ember-400 hover:text-ember-600',
+    ]}
+  >
+    All
+  </a>
+  {categories.map((cat) => (
+    <a
+      href={`/?category=${cat}`}
+      class:list={[
+        'px-4 py-2 text-sm font-medium rounded-full border transition-colors capitalize',
+        activeCategory === cat
+          ? 'bg-charcoal text-warm-white border-charcoal'
+          : 'bg-white text-thread-600 border-thread-200 hover:border-ember-400 hover:text-ember-600',
+      ]}
+    >
+      {cat}
+    </a>
+  ))}
+</div>

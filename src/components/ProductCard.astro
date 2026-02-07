@@ -1,0 +1,87 @@
+---
+interface Props {
+  id: string;
+  name: string;
+  price: number;
+  category: string;
+  image: string;
+  badge?: string | null;
+}
+
+const { id, name, price, category, image, badge } = Astro.props;
+---
+
+<a
+  href={`/products/${id}/`}
+  class="group block bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300"
+  data-category={category}
+>
+  <!-- Image Container -->
+  <div class="relative aspect-square overflow-hidden bg-thread-100">
+    <img
+      src={image}
+      alt={name}
+      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+      loading="lazy"
+    />
+    {badge && (
+      <span class="absolute top-3 left-3 px-2.5 py-1 bg-charcoal text-warm-white text-xs font-semibold rounded-full">
+        {badge}
+      </span>
+    )}
+    <!-- Quick add overlay -->
+    <div class="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out">
+      <button
+        class="add-to-cart-btn w-full py-2.5 bg-ember-600 hover:bg-ember-700 text-white text-sm font-semibold rounded-lg transition-colors"
+        data-product-id={id}
+        data-product-name={name}
+        data-product-price={price}
+        data-product-image={image}
+        onclick="event.preventDefault(); event.stopPropagation();"
+      >
+        Add to Cart
+      </button>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="p-4">
+    <p class="text-xs font-medium text-thread-500 uppercase tracking-wide mb-1">
+      {category}
+    </p>
+    <h3 class="text-sm font-semibold text-charcoal group-hover:text-ember-600 transition-colors line-clamp-1">
+      {name}
+    </h3>
+    <p class="mt-1 text-base font-bold text-charcoal">
+      ${price}
+    </p>
+  </div>
+</a>
+
+<script>
+  document.querySelectorAll('.add-to-cart-btn').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const target = e.currentTarget as HTMLElement;
+      const product = {
+        id: target.dataset.productId,
+        name: target.dataset.productName,
+        price: Number(target.dataset.productPrice),
+        image: target.dataset.productImage,
+      };
+      window.emberCart?.add(product);
+
+      // Visual feedback
+      const original = target.textContent;
+      target.textContent = 'Added!';
+      target.classList.add('bg-green-600');
+      target.classList.remove('bg-ember-600');
+      setTimeout(() => {
+        target.textContent = original;
+        target.classList.remove('bg-green-600');
+        target.classList.add('bg-ember-600');
+      }, 1000);
+    });
+  });
+</script>

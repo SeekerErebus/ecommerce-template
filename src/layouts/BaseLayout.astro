@@ -1,0 +1,84 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'Ember & Thread — Handcrafted artisan goods for the modern home.' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <title>{title} | Ember & Thread</title>
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <slot />
+    <script>
+      // Cart state management
+      window.emberCart = window.emberCart || {
+        items: JSON.parse(localStorage.getItem('ember-cart') || '[]'),
+
+        add(product) {
+          const existing = this.items.find((item) => item.id === product.id);
+          if (existing) {
+            existing.quantity += 1;
+          } else {
+            this.items.push({ ...product, quantity: 1 });
+          }
+          this.save();
+          this.notify();
+        },
+
+        remove(productId) {
+          this.items = this.items.filter((item) => item.id !== productId);
+          this.save();
+          this.notify();
+        },
+
+        updateQuantity(productId, quantity) {
+          const item = this.items.find((item) => item.id === productId);
+          if (item) {
+            item.quantity = Math.max(0, quantity);
+            if (item.quantity === 0) {
+              this.remove(productId);
+              return;
+            }
+          }
+          this.save();
+          this.notify();
+        },
+
+        getTotal() {
+          return this.items.reduce(
+            (sum, item) => sum + item.price * item.quantity,
+            0
+          );
+        },
+
+        getCount() {
+          return this.items.reduce((sum, item) => sum + item.quantity, 0);
+        },
+
+        save() {
+          localStorage.setItem('ember-cart', JSON.stringify(this.items));
+        },
+
+        notify() {
+          window.dispatchEvent(new CustomEvent('cart-updated'));
+        },
+      };
+    </script>
+  </body>
+</html>
