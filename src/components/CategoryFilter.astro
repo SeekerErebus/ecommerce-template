@@ -1,35 +1,108 @@
 ---
 interface Props {
   categories: string[];
-  activeCategory: string | null;
 }
 
-const { categories, activeCategory } = Astro.props;
+const { categories } = Astro.props;
 ---
 
-<div class="flex flex-wrap items-center gap-2">
-  <a
-    href="/"
-    class:list={[
-      'px-4 py-2 text-sm font-medium rounded-full border transition-colors',
-      !activeCategory
-        ? 'bg-charcoal text-warm-white border-charcoal'
-        : 'bg-white text-thread-600 border-thread-200 hover:border-ember-400 hover:text-ember-600',
-    ]}
+<div id="category-filter" class="flex flex-wrap items-center gap-2">
+  <button
+    type="button"
+    class="category-btn px-4 py-2 text-sm font-medium rounded-full border transition-colors bg-charcoal text-warm-white border-charcoal"
+    data-filter=""
   >
     All
-  </a>
+  </button>
   {categories.map((cat) => (
-    <a
-      href={`/?category=${cat}`}
-      class:list={[
-        'px-4 py-2 text-sm font-medium rounded-full border transition-colors capitalize',
-        activeCategory === cat
-          ? 'bg-charcoal text-warm-white border-charcoal'
-          : 'bg-white text-thread-600 border-thread-200 hover:border-ember-400 hover:text-ember-600',
-      ]}
+    <button
+      type="button"
+      class="category-btn px-4 py-2 text-sm font-medium rounded-full border transition-colors capitalize bg-white text-thread-600 border-thread-200 hover:border-ember-400 hover:text-ember-600"
+      data-filter={cat}
     >
       {cat}
-    </a>
+    </button>
   ))}
 </div>
+
+<script>
+  function initCategoryFilter() {
+    const buttons = document.querySelectorAll<HTMLButtonElement>('.category-btn');
+    const cards = document.querySelectorAll<HTMLElement>('.product-card');
+    const heading = document.getElementById('products-heading');
+    const countEl = document.getElementById('products-count');
+    const noProductsMsg = document.getElementById('no-products-message');
+    const clearBtn = document.getElementById('clear-filter-btn');
+    const productsGrid = document.getElementById('products-grid');
+
+    const activeClasses = ['bg-charcoal', 'text-warm-white', 'border-charcoal'];
+    const inactiveClasses = ['bg-white', 'text-thread-600', 'border-thread-200', 'hover:border-ember-400', 'hover:text-ember-600'];
+
+    function setActiveButton(activeBtn: HTMLButtonElement) {
+      buttons.forEach((btn) => {
+        btn.classList.remove(...activeClasses);
+        btn.classList.add(...inactiveClasses);
+      });
+      activeBtn.classList.remove(...inactiveClasses);
+      activeBtn.classList.add(...activeClasses);
+    }
+
+    function filterByCategory(category: string) {
+      let visibleCount = 0;
+
+      cards.forEach((card) => {
+        const cardCategory = card.getAttribute('data-category') || '';
+        const show = !category || cardCategory === category;
+        card.style.display = show ? '' : 'none';
+        if (show) visibleCount++;
+      });
+
+      // Update heading
+      if (heading) {
+        heading.textContent = category
+          ? category.charAt(0).toUpperCase() + category.slice(1)
+          : 'All Products';
+      }
+
+      // Update count
+      if (countEl) {
+        countEl.textContent = `${visibleCount} ${visibleCount === 1 ? 'item' : 'items'}`;
+      }
+
+      // Toggle empty state
+      if (noProductsMsg && productsGrid) {
+        noProductsMsg.classList.toggle('hidden', visibleCount > 0);
+        productsGrid.classList.toggle('hidden', visibleCount === 0);
+      }
+
+      // Dispatch event so search modal can know active category
+      window.dispatchEvent(new CustomEvent('category-changed', { detail: { category } }));
+    }
+
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const category = btn.getAttribute('data-filter') || '';
+        setActiveButton(btn);
+        filterByCategory(category);
+      });
+    });
+
+    // Clear filter button in empty state
+    clearBtn?.addEventListener('click', () => {
+      const allBtn = document.querySelector<HTMLButtonElement>('.category-btn[data-filter=""]');
+      if (allBtn) {
+        setActiveButton(allBtn);
+        filterByCategory('');
+      }
+    });
+
+    // Expose for search modal to use
+    (window as any).__filterByCategory = filterByCategory;
+    (window as any).__setActiveCategoryButton = (category: string) => {
+      const btn = document.querySelector<HTMLButtonElement>(`.category-btn[data-filter="${category}"]`);
+      if (btn) setActiveButton(btn);
+    };
+  }
+
+  initCategoryFilter();
+</script>

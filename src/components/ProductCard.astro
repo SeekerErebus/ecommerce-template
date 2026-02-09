@@ -6,15 +6,18 @@ interface Props {
   category: string;
   image: string;
   badge?: string | null;
+  description?: string;
 }
 
-const { id, name, price, category, image, badge } = Astro.props;
+const { id, name, price, category, image, badge, description } = Astro.props;
 ---
 
 <a
   href={`/products/${id}/`}
-  class="group block bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300"
+  class="product-card group block bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300"
   data-category={category}
+  data-product-name={name.toLowerCase()}
+  data-product-description={description?.toLowerCase() || ''}
 >
   <!-- Image Container -->
   <div class="relative aspect-square overflow-hidden bg-thread-100">

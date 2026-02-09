@@ -1,10 +1,10 @@
 ---
 const navLinks = [
-  { label: 'Shop', href: '/' },
-  { label: 'Ceramics', href: '/?category=ceramics' },
-  { label: 'Textiles', href: '/?category=textiles' },
-  { label: 'Kitchen', href: '/?category=kitchen' },
-  { label: 'Home', href: '/?category=home' },
+  { label: 'Shop', category: '' },
+  { label: 'Ceramics', category: 'ceramics' },
+  { label: 'Textiles', category: 'textiles' },
+  { label: 'Kitchen', category: 'kitchen' },
+  { label: 'Home', category: 'home' },
 ];
 ---
 
@@ -21,21 +21,23 @@ const navLinks = [
       <!-- Desktop Nav -->
       <nav class="hidden md:flex items-center gap-8">
         {navLinks.map((link) => (
-          <a
-            href={link.href}
-            class="text-sm font-medium text-thread-700 hover:text-ember-600 transition-colors"
+          <button
+            type="button"
+            class="nav-filter-btn text-sm font-medium text-thread-700 hover:text-ember-600 transition-colors"
+            data-nav-category={link.category}
           >
             {link.label}
-          </a>
+          </button>
         ))}
       </nav>
 
       <!-- Actions -->
       <div class="flex items-center gap-4">
-        <!-- Search (decorative) -->
+        <!-- Search -->
         <button
+          id="search-toggle"
           class="hidden sm:flex items-center justify-center w-10 h-10 rounded-full text-thread-600 hover:text-ember-600 hover:bg-thread-100 transition-colors"
-          aria-label="Search"
+          aria-label="Search products"
         >
           <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
@@ -76,17 +78,65 @@ const navLinks = [
     <nav id="mobile-menu" class="md:hidden hidden border-t border-thread-200 py-4">
       <div class="flex flex-col gap-3">
         {navLinks.map((link) => (
-          <a
-            href={link.href}
-            class="text-sm font-medium text-thread-700 hover:text-ember-600 transition-colors py-1"
+          <button
+            type="button"
+            class="nav-filter-btn text-sm font-medium text-thread-700 hover:text-ember-600 transition-colors py-1 text-left"
+            data-nav-category={link.category}
           >
             {link.label}
-          </a>
+          </button>
         ))}
       </div>
     </nav>
   </div>
 </header>
+
+<!-- Search Modal Overlay -->
+<div id="search-overlay" class="fixed inset-0 z-50 hidden">
+  <!-- Backdrop -->
+  <div id="search-backdrop" class="absolute inset-0 bg-charcoal/60 backdrop-blur-sm"></div>
+
+  <!-- Modal -->
+  <div class="relative flex flex-col items-center pt-[15vh] px-4">
+    <div class="w-full max-w-xl bg-warm-white rounded-xl shadow-2xl overflow-hidden">
+      <!-- Search Input -->
+      <div class="flex items-center gap-3 px-5 py-4 border-b border-thread-200">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-thread-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+        </svg>
+        <input
+          id="search-input"
+          type="text"
+          placeholder="Search products..."
+          autocomplete="off"
+          class="flex-1 bg-transparent text-charcoal text-lg placeholder:text-thread-400 outline-none"
+        />
+        <button id="search-close" class="flex items-center justify-center w-8 h-8 rounded-lg text-thread-500 hover:text-charcoal hover:bg-thread-100 transition-colors" aria-label="Close search">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Results -->
+      <div id="search-results" class="max-h-[50vh] overflow-y-auto">
+        <div id="search-hint" class="px-5 py-8 text-center text-thread-500 text-sm">
+          Start typing to search products...
+        </div>
+        <div id="search-results-list" class="hidden divide-y divide-thread-100"></div>
+        <div id="search-no-results" class="hidden px-5 py-8 text-center text-thread-500 text-sm">
+          No products match your search.
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="px-5 py-3 border-t border-thread-200 flex items-center justify-between text-xs text-thread-500">
+        <span>Press <kbd class="px-1.5 py-0.5 rounded bg-thread-100 text-thread-700 font-mono">Esc</kbd> to close</span>
+        <span id="search-result-count"></span>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
   // Mobile menu toggle
@@ -94,6 +144,22 @@ const navLinks = [
   const mobileMenu = document.getElementById('mobile-menu');
   menuToggle?.addEventListener('click', () => {
     mobileMenu?.classList.toggle('hidden');
+  });
+
+  // Nav filter buttons — delegate to category filter system
+  document.querySelectorAll<HTMLButtonElement>('.nav-filter-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const category = btn.getAttribute('data-nav-category') || '';
+      if ((window as any).__filterByCategory) {
+        (window as any).__filterByCategory(category);
+        (window as any).__setActiveCategoryButton?.(category);
+      }
+      // Close mobile menu if open
+      mobileMenu?.classList.add('hidden');
+      // Scroll to products section
+      const productsSection = document.getElementById('products');
+      productsSection?.scrollIntoView({ behavior: 'smooth' });
+    });
   });
 
   // Cart count badge
@@ -116,4 +182,134 @@ const navLinks = [
 
   window.addEventListener('cart-updated', updateCartBadge);
   updateCartBadge();
+
+  // ---- Search Modal ----
+  const searchToggle = document.getElementById('search-toggle');
+  const searchOverlay = document.getElementById('search-overlay');
+  const searchBackdrop = document.getElementById('search-backdrop');
+  const searchClose = document.getElementById('search-close');
+  const searchInput = document.getElementById('search-input') as HTMLInputElement | null;
+  const searchHint = document.getElementById('search-hint');
+  const searchResultsList = document.getElementById('search-results-list');
+  const searchNoResults = document.getElementById('search-no-results');
+  const searchResultCount = document.getElementById('search-result-count');
+
+  // Gather product data from cards on the page
+  function getProductData() {
+    const cards = document.querySelectorAll<HTMLElement>('.product-card');
+    return Array.from(cards).map((card) => ({
+      name: card.getAttribute('data-product-name') || '',
+      description: card.getAttribute('data-product-description') || '',
+      category: card.getAttribute('data-category') || '',
+      href: card.getAttribute('href') || '#',
+      // Extract display info from the card DOM
+      displayName: card.querySelector('h3')?.textContent?.trim() || '',
+      displayCategory: card.querySelector('.text-xs')?.textContent?.trim() || '',
+      displayPrice: card.querySelector('.text-base')?.textContent?.trim() || '',
+      image: card.querySelector('img')?.getAttribute('src') || '',
+    }));
+  }
+
+  function openSearch() {
+    searchOverlay?.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => searchInput?.focus(), 50);
+    performSearch('');
+  }
+
+  function closeSearch() {
+    searchOverlay?.classList.add('hidden');
+    document.body.style.overflow = '';
+    if (searchInput) searchInput.value = '';
+  }
+
+  function performSearch(query: string) {
+    if (!searchHint || !searchResultsList || !searchNoResults || !searchResultCount) return;
+
+    const trimmed = query.trim().toLowerCase();
+
+    if (!trimmed) {
+      searchHint.classList.remove('hidden');
+      searchResultsList.classList.add('hidden');
+      searchNoResults.classList.add('hidden');
+      searchResultCount.textContent = '';
+      return;
+    }
+
+    searchHint.classList.add('hidden');
+
+    const products = getProductData();
+    const matches = products.filter(
+      (p) => p.name.includes(trimmed) || p.description.includes(trimmed) || p.category.includes(trimmed)
+    );
+
+    if (matches.length === 0) {
+      searchResultsList.classList.add('hidden');
+      searchNoResults.classList.remove('hidden');
+      searchResultCount.textContent = '0 results';
+      return;
+    }
+
+    searchNoResults.classList.add('hidden');
+    searchResultsList.classList.remove('hidden');
+    searchResultCount.textContent = `${matches.length} result${matches.length === 1 ? '' : 's'}`;
+
+    searchResultsList.innerHTML = matches
+      .map(
+        (p) => `
+        <a href="${p.href}" class="flex items-center gap-4 px-5 py-3 hover:bg-thread-50 transition-colors search-result-link" data-category="${p.category}">
+          <img src="${p.image}" alt="" class="w-12 h-12 rounded-lg object-cover bg-thread-100 shrink-0" loading="lazy" />
+          <div class="min-w-0 flex-1">
+            <p class="text-sm font-semibold text-charcoal truncate">${p.displayName}</p>
+            <p class="text-xs text-thread-500 capitalize">${p.displayCategory}</p>
+          </div>
+          <span class="text-sm font-bold text-charcoal shrink-0">${p.displayPrice}</span>
+        </a>
+      `
+      )
+      .join('');
+
+    // Add click handler to each result to close search and scroll to products
+    searchResultsList.querySelectorAll('.search-result-link').forEach((link) => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const category = (link as HTMLElement).getAttribute('data-category') || '';
+        closeSearch();
+
+        // Apply category filter and scroll to products
+        if ((window as any).__filterByCategory) {
+          (window as any).__filterByCategory(category);
+          (window as any).__setActiveCategoryButton?.(category);
+        }
+
+        const productsSection = document.getElementById('products');
+        productsSection?.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+  }
+
+  searchToggle?.addEventListener('click', openSearch);
+  searchBackdrop?.addEventListener('click', closeSearch);
+  searchClose?.addEventListener('click', closeSearch);
+
+  searchInput?.addEventListener('input', () => {
+    performSearch(searchInput.value);
+  });
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', (e) => {
+    // Close on Escape
+    if (e.key === 'Escape' && !searchOverlay?.classList.contains('hidden')) {
+      closeSearch();
+    }
+    // Open on Cmd/Ctrl + K
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      e.preventDefault();
+      if (searchOverlay?.classList.contains('hidden')) {
+        openSearch();
+      } else {
+        closeSearch();
+      }
+    }
+  });
 </script>

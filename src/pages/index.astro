@@ -9,17 +9,10 @@ import CartSidebar from '../components/CartSidebar.astro';
 import Footer from '../components/Footer.astro';
 import products from '../data/products.json';
 
-const url = new URL(Astro.request.url);
-const activeCategory = url.searchParams.get('category');
-
 const categories = [...new Set(products.map((p) => p.category))].sort();
-
-const filteredProducts = activeCategory
-  ? products.filter((p) => p.category === activeCategory)
-  : products;
 ---
 
-<BaseLayout title={activeCategory ? `${activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1)} Collection` : 'Shop'}>
+<BaseLayout title="Shop">
   <PromoBar />
   <Header />
   <HeroBanner />
@@ -28,20 +21,18 @@ const filteredProducts = activeCategory
   <section id="products" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
       <div>
-        <h2 class="font-serif text-2xl sm:text-3xl font-bold text-charcoal">
-          {activeCategory
-            ? `${activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1)}`
-            : 'All Products'}
+        <h2 id="products-heading" class="font-serif text-2xl sm:text-3xl font-bold text-charcoal">
+          All Products
         </h2>
-        <p class="text-sm text-thread-500 mt-1">
-          {filteredProducts.length} {filteredProducts.length === 1 ? 'item' : 'items'}
+        <p id="products-count" class="text-sm text-thread-500 mt-1">
+          {products.length} items
         </p>
       </div>
-      <CategoryFilter categories={categories} activeCategory={activeCategory} />
+      <CategoryFilter categories={categories} />
     </div>
 
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-      {filteredProducts.map((product) => (
+    <div id="products-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+      {products.map((product) => (
         <ProductCard
           id={product.id}
           name={product.name}
@@ -49,18 +40,20 @@ const filteredProducts = activeCategory
           category={product.category}
           image={product.image}
           badge={product.badge}
+          description={product.description}
         />
       ))}
     </div>
 
-    {filteredProducts.length === 0 && (
-      <div class="text-center py-16">
-        <p class="text-thread-500 text-lg">No products found in this category.</p>
-        <a href="/" class="inline-block mt-4 text-ember-600 hover:text-ember-700 font-medium">
-          View all products
-        </a>
-      </div>
-    )}
+    <div id="no-products-message" class="text-center py-16 hidden">
+      <p class="text-thread-500 text-lg">No products found.</p>
+      <button
+        id="clear-filter-btn"
+        class="inline-block mt-4 text-ember-600 hover:text-ember-700 font-medium cursor-pointer"
+      >
+        View all products
+      </button>
+    </div>
   </section>
 
   <!-- Features Bar -->
